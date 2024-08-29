@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:scanner_app/RecognizerScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -115,12 +118,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: const Icon(Icons.image_outlined,
                             size: 35, color: Colors.white),
                         onTap: () async {
-                          XFile? image = await imagePicker.pickImage(
+                          XFile? xfile = await imagePicker.pickImage(
                               source: ImageSource.gallery);
                           // You can now use the 'image' variable here
-                          if (image != null) {
-                            // Do something with the image, for example:
-                            print('Image selected: ${image.path}');
+                          if (xfile != null) {
+                            File image = File(xfile.path);
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (ctx) {
+                              return RecognizerScreen(image);
+                            }));
                           } else {
                             print('No image selected.');
                           }
