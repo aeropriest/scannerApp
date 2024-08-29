@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scanner_app/RecognizerScreen.dart';
+import 'package:scanner_app/CardScanner.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,6 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     imagePicker = ImagePicker();
   }
+
+  bool scan = false;
+  bool recognize = true;
+  bool enhance = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,43 +45,76 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.scanner_outlined,
-                                size: 25, color: Colors.white),
-                            const Text('Scan',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ))
+                            Icon(
+                              Icons.scanner,
+                              size: 25,
+                              color: scan ? Colors.black : Colors.white,
+                            ),
+                            Text(
+                              'Scan',
+                              style: TextStyle(
+                                color: scan ? Colors.black : Colors.white,
+                              ),
+                            )
                           ],
                         ),
-                        onTap: () => {},
+                        onTap: () => {
+                          setState(() {
+                            scan = true;
+                            recognize = false;
+                            enhance = false;
+                          })
+                        },
                       ),
                       InkWell(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.assignment_sharp,
-                                size: 25, color: Colors.white),
-                            const Text('Recognize',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ))
+                            Icon(
+                              Icons.assessment_sharp,
+                              size: 25,
+                              color: recognize ? Colors.black : Colors.white,
+                            ),
+                            Text(
+                              'Recognize',
+                              style: TextStyle(
+                                color: recognize ? Colors.black : Colors.white,
+                              ),
+                            )
                           ],
                         ),
-                        onTap: () => {},
+                        onTap: () => {
+                          setState(() {
+                            scan = false;
+                            recognize = true;
+                            enhance = false;
+                          })
+                        },
                       ),
                       InkWell(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.image_outlined,
-                                size: 25, color: Colors.white),
-                            const Text('Enhance',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ))
+                            Icon(
+                              Icons.image_outlined,
+                              size: 25,
+                              color: enhance ? Colors.black : Colors.white,
+                            ),
+                            Text(
+                              'Enhance',
+                              style: TextStyle(
+                                color: enhance ? Colors.black : Colors.white,
+                              ),
+                            )
                           ],
                         ),
-                        onTap: () async {},
+                        onTap: () => {
+                          setState(() {
+                            scan = false;
+                            recognize = false;
+                            enhance = true;
+                          })
+                        },
                       ),
                     ],
                   )),
@@ -102,15 +141,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: const Icon(Icons.camera,
                             size: 50, color: Colors.white),
                         onTap: () async {
-                          XFile? image = await imagePicker.pickImage(
-                              source: ImageSource.camera);
-                          // You can now use the 'image' variable here
-                          if (image != null) {
-                            // Do something with the image, for example:
-                            print('Image selected: ${image.path}');
-                          } else {
-                            print('No image selected.');
-                          }
+                          // await controller.takePicture().then((value) {
+                          //   if (value != null) {
+                          //     File image = File(value.path);
+                          //     processImage(image);
+                          //   }
+                          // });
                         },
                       ),
                       InkWell(
@@ -119,15 +155,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () async {
                           XFile? xfile = await imagePicker.pickImage(
                               source: ImageSource.gallery);
-                          // You can now use the 'image' variable here
                           if (xfile != null) {
                             File image = File(xfile.path);
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (ctx) {
-                              return RecognizerScreen(image);
-                            }));
-                          } else {
-                            print('No image selected.');
+                            processImage(image);
                           }
                         },
                       )
@@ -136,5 +166,34 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ));
+  }
+
+  processImage(File image) async {
+    final editedImage = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ImageCropper(
+          image: image.readAsBytesSync(), // <-- Uint8List of image
+        ),
+      ),
+    );
+    image.writeAsBytes(editedImage);
+
+    if (recognize) {
+      print("recognize");
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+        return RecognizerScreen(image);
+      }));
+    } else if (scan) {
+      print("scan");
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+        return CardScanner(image);
+      }));
+    } else if (enhance) {
+      print("enhance");
+      // Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+      //   return EnhanceScreen(image);
+      // }));
+    }
   }
 }
