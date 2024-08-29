@@ -6,6 +6,8 @@ import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scanner_app/CardScannerScreen.dart';
 import 'package:scanner_app/RecognizerScreen.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -151,11 +153,36 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Card(
               color: Colors.black,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                        height: MediaQuery.of(context).size.height - 300,
+                        child:
+                            isInit ? CameraPreview(controller) : Container()),
+                  ),
+                  Container(
+                    // child: Image.asset(
+                    //   "images/f1.png",
+                    //   fit: BoxFit.fill,
+                    // ),
+                    width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height - 300,
-                    child: isInit ? CameraPreview(controller) : Container()),
+                    padding: EdgeInsets.all(10),
+                  ),
+                  Container(
+                  color: Colors.white,
+                  height: 2,
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.all(20),
+                ).animate(onPlay: (controller) => controller.repeat()).moveY(
+                    begin: 0,
+                    end: MediaQuery.of(context).size.height - 320,
+                    duration: 2000.ms)
+              ],
+                  
+                ],
               ),
             ),
             Card(
