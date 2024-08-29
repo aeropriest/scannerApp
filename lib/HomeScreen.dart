@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scanner_app/CardScannerScreen.dart';
 import 'package:scanner_app/RecognizerScreen.dart';
@@ -160,6 +161,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           // You can now use the 'image' variable here
                           if (xfile != null) {
                             File image = File(xfile.path);
+
+                            final edittedImage = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ImageCropper(
+                                        image: image.readAsBytesSync())));
+
+                            image.writeAsBytes(edittedImage);
                             if (recognize) {
                               Navigator.push(context,
                                   MaterialPageRoute(builder: (ctx) {
@@ -181,5 +190,30 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ));
+  }
+
+  processImage(File image) async {
+    final editedImage = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ImageCropper(
+          image: image.readAsBytesSync(), // <-- Uint8List of image
+        ),
+      ),
+    );
+    image.writeAsBytes(editedImage);
+    if (recognize) {
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+        return RecognizerScreen(image);
+      }));
+    } else if (scan) {
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+        return CardScannerScreen(image);
+      }));
+    } else if (enhance) {
+      // Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+      //   return EnhanceScreen(image);
+      // }));
+    }
   }
 }
