@@ -75,40 +75,6 @@ class _CardScannerScreenState extends State<CardScannerScreen> {
                   color: Colors.grey.shade300,
                   child: Column(
                     children: [
-                      Container(
-                        color: Colors.blueAccent,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Icon(
-                                Icons.document_scanner,
-                                color: Colors.white,
-                              ),
-                              const Text(
-                                'Results',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Clipboard.setData(
-                                      ClipboardData(text: results));
-                                  SnackBar sn =
-                                      SnackBar(content: Text("Copied"));
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(sn);
-                                },
-                                child: const Icon(
-                                  Icons.copy,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
                       ListView.builder(
                         itemBuilder: (context, position) {
                           return Card(
@@ -162,10 +128,6 @@ class _CardScannerScreenState extends State<CardScannerScreen> {
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                       )
-                      // Text(
-                      //   results,
-                      //   style: TextStyle(fontSize: 18),
-                      // ),
                     ],
                   ))
             ],
