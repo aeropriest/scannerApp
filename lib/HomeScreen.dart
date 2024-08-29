@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:scanner_app/CardScannerScreen.dart';
 import 'package:scanner_app/RecognizerScreen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -19,6 +20,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     imagePicker = ImagePicker();
   }
+
+  bool scan = false;
+  bool recognize = true;
+  bool enhance = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,43 +44,76 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.scanner_outlined,
-                                size: 25, color: Colors.white),
-                            const Text('Scan',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ))
+                            Icon(
+                              Icons.scanner,
+                              size: 25,
+                              color: scan ? Colors.black : Colors.white,
+                            ),
+                            Text(
+                              'Scan',
+                              style: TextStyle(
+                                color: scan ? Colors.black : Colors.white,
+                              ),
+                            )
                           ],
                         ),
-                        onTap: () => {},
+                        onTap: () {
+                          setState(() {
+                            scan = true;
+                            recognize = false;
+                            enhance = false;
+                          });
+                        },
                       ),
                       InkWell(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.assignment_sharp,
-                                size: 25, color: Colors.white),
-                            const Text('Recognize',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ))
+                            Icon(
+                              Icons.document_scanner,
+                              size: 25,
+                              color: recognize ? Colors.black : Colors.white,
+                            ),
+                            Text(
+                              'Recognize',
+                              style: TextStyle(
+                                color: recognize ? Colors.black : Colors.white,
+                              ),
+                            )
                           ],
                         ),
-                        onTap: () => {},
+                        onTap: () {
+                          setState(() {
+                            scan = false;
+                            recognize = true;
+                            enhance = false;
+                          });
+                        },
                       ),
                       InkWell(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.image_outlined,
-                                size: 25, color: Colors.white),
-                            const Text('Enhance',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ))
+                            Icon(
+                              Icons.assignment_sharp,
+                              size: 25,
+                              color: enhance ? Colors.black : Colors.white,
+                            ),
+                            Text(
+                              'Enhance',
+                              style: TextStyle(
+                                color: enhance ? Colors.black : Colors.white,
+                              ),
+                            )
                           ],
                         ),
-                        onTap: () async {},
+                        onTap: () {
+                          setState(() {
+                            scan = false;
+                            recognize = false;
+                            enhance = true;
+                          });
+                        },
                       ),
                     ],
                   )),
@@ -122,10 +160,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           // You can now use the 'image' variable here
                           if (xfile != null) {
                             File image = File(xfile.path);
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (ctx) {
-                              return RecognizerScreen(image);
-                            }));
+                            if (recognize) {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (ctx) {
+                                return RecognizerScreen(image);
+                              }));
+                            } else if (scan) {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (ctx) {
+                                return CardScannerScreen(image);
+                              }));
+                            }
                           } else {
                             print('No image selected.');
                           }
