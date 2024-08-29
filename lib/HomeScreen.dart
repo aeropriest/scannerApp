@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,11 +16,40 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late ImagePicker imagePicker;
+  late List<CameraDescription> _cameras;
+  late CameraController controller;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     imagePicker = ImagePicker();
+    initalizeCamera();
+  }
+
+  bool isInit = false;
+  initalizeCamera() async {
+    _cameras = await availableCameras();
+    controller = CameraController(_cameras[0], ResolutionPreset.max);
+    controller.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        isInit = true;
+      });
+    }).catchError((Object e) {
+      if (e is CameraException) {
+        switch (e.code) {
+          case 'CameraAccessDenied':
+            // Handle access errors here.
+            break;
+          default:
+            // Handle other errors here.
+            break;
+        }
+      }
+    });
   }
 
   bool scan = false;
@@ -122,8 +152,8 @@ class _HomeScreenState extends State<HomeScreen> {
             Card(
               color: Colors.black,
               child: Container(
-                height: MediaQuery.of(context).size.height - 300,
-              ),
+                  height: MediaQuery.of(context).size.height - 300,
+                  child: isInit ? CameraPreview(controller) : Container()),
             ),
             Card(
               color: Colors.blueAccent,
