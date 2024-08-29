@@ -151,9 +151,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Card(
               color: Colors.black,
-              child: Container(
-                  height: MediaQuery.of(context).size.height - 300,
-                  child: isInit ? CameraPreview(controller) : Container()),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Container(
+                    height: MediaQuery.of(context).size.height - 300,
+                    child: isInit ? CameraPreview(controller) : Container()),
+              ),
             ),
             Card(
               color: Colors.blueAccent,
@@ -168,20 +171,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         onTap: () => {},
                       ),
                       InkWell(
-                        child: const Icon(Icons.camera,
-                            size: 50, color: Colors.white),
-                        onTap: () async {
-                          XFile? image = await imagePicker.pickImage(
-                              source: ImageSource.camera);
-                          // You can now use the 'image' variable here
-                          if (image != null) {
-                            // Do something with the image, for example:
-                            print('Image selected: ${image.path}');
-                          } else {
-                            print('No image selected.');
-                          }
-                        },
-                      ),
+                          child: const Icon(Icons.camera,
+                              size: 50, color: Colors.white),
+                          onTap: () async {
+                            await controller.takePicture().then((value) {
+                              if (value != null) {
+                                File image = File(value.path);
+                                processImage(image);
+                              }
+                            });
+                          }),
                       InkWell(
                         child: const Icon(Icons.image_outlined,
                             size: 35, color: Colors.white),
@@ -191,27 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           // You can now use the 'image' variable here
                           if (xfile != null) {
                             File image = File(xfile.path);
-
-                            final edittedImage = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ImageCropper(
-                                        image: image.readAsBytesSync())));
-
-                            image.writeAsBytes(edittedImage);
-                            if (recognize) {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (ctx) {
-                                return RecognizerScreen(image);
-                              }));
-                            } else if (scan) {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (ctx) {
-                                return CardScannerScreen(image);
-                              }));
-                            }
-                          } else {
-                            print('No image selected.');
+                            processImage(image);
                           }
                         },
                       )
@@ -223,15 +202,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   processImage(File image) async {
-    final editedImage = await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ImageCropper(
-          image: image.readAsBytesSync(), // <-- Uint8List of image
-        ),
-      ),
-    );
-    image.writeAsBytes(editedImage);
+    final edittedImage = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                ImageCropper(image: image.readAsBytesSync())));
+
+    image.writeAsBytes(edittedImage);
     if (recognize) {
       Navigator.push(context, MaterialPageRoute(builder: (ctx) {
         return RecognizerScreen(image);
@@ -240,10 +217,6 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.push(context, MaterialPageRoute(builder: (ctx) {
         return CardScannerScreen(image);
       }));
-    } else if (enhance) {
-      // Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-      //   return EnhanceScreen(image);
-      // }));
     }
   }
 }
