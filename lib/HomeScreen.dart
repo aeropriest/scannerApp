@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scanner_app/CardScannerScreen.dart';
+import 'package:scanner_app/EnhanceScreen.dart';
 import 'package:scanner_app/RecognizerScreen.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -309,6 +310,10 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (scan) {
       Navigator.push(context, MaterialPageRoute(builder: (ctx) {
         return CardScannerScreen(image);
+      }));
+    } else if (enhance) {
+      Navigator.push(context, MaterialPageRoute(builder: (ctx) {
+        return EnhanceScreen(image);
       }));
     }
   }
