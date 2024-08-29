@@ -8,7 +8,6 @@ import 'package:scanner_app/CardScannerScreen.dart';
 import 'package:scanner_app/RecognizerScreen.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -162,26 +161,93 @@ class _HomeScreenState extends State<HomeScreen> {
                         child:
                             isInit ? CameraPreview(controller) : Container()),
                   ),
-                  Container(
-                    // child: Image.asset(
-                    //   "images/f1.png",
-                    //   fit: BoxFit.fill,
-                    // ),
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 300,
-                    padding: EdgeInsets.all(10),
+                  // Top left corner
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: Container(
+                      width: 18,
+                      height: 2,
+                      color: Colors.red,
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: Container(
+                      width: 2,
+                      height: 18,
+                      color: Colors.red,
+                    ),
+                  ),
+                  // Top right corner
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Container(
+                      width: 18,
+                      height: 2,
+                      color: Colors.red,
+                    ),
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Container(
+                      width: 2,
+                      height: 18,
+                      color: Colors.red,
+                    ),
+                  ),
+                  // Bottom left corner
+                  Positioned(
+                    bottom: 10,
+                    left: 10,
+                    child: Container(
+                      width: 18,
+                      height: 2,
+                      color: Colors.red,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    left: 10,
+                    child: Container(
+                      width: 2,
+                      height: 18,
+                      color: Colors.red,
+                    ),
+                  ),
+                  // Bottom right corner
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: Container(
+                      width: 18,
+                      height: 2,
+                      color: Colors.red,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: Container(
+                      width: 2,
+                      height: 18,
+                      color: Colors.red,
+                    ),
                   ),
                   Container(
-                  color: Colors.white,
-                  height: 2,
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.all(20),
-                ).animate(onPlay: (controller) => controller.repeat()).moveY(
-                    begin: 0,
-                    end: MediaQuery.of(context).size.height - 320,
-                    duration: 2000.ms)
-              ],
-                  
+                    color: Colors.white,
+                    height: 2,
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.all(20),
+                  ).animate(onPlay: (controller) => controller.repeat()).moveY(
+                        begin: 0,
+                        end: MediaQuery.of(context).size.height - 320,
+                        duration: 2000.ms,
+                        curve: Curves.easeInOut,
+                      ),
                 ],
               ),
             ),
