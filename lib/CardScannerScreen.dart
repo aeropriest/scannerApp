@@ -109,10 +109,63 @@ class _CardScannerScreenState extends State<CardScannerScreen> {
                           ),
                         ),
                       ),
-                      Text(
-                        results,
-                        style: TextStyle(fontSize: 18),
-                      ),
+                      ListView.builder(
+                        itemBuilder: (context, position) {
+                          return Card(
+                            margin:
+                                EdgeInsets.only(left: 20, right: 20, top: 10),
+                            color: Colors.blueAccent,
+                            child: Container(
+                              height: 70,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(
+                                      entitiesList[position].iconData,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        entitiesList[position].value,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 18),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Clipboard.setData(ClipboardData(
+                                            text:
+                                                entitiesList[position].value));
+                                        SnackBar sn =
+                                            SnackBar(content: Text("Copied"));
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(sn);
+                                      },
+                                      child: const Icon(
+                                        Icons.copy,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        itemCount: entitiesList.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                      )
+                      // Text(
+                      //   results,
+                      //   style: TextStyle(fontSize: 18),
+                      // ),
                     ],
                   ))
             ],
