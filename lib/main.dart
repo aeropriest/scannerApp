@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:namer_app/HomeScreen.dart';
+import 'package:scanner_app/HomeScreen.dart';
 
 void main() {
   runApp(const MyApp());
