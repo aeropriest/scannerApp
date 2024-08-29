@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scanner_app/RecognizerScreen.dart';
@@ -31,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Card(
               color: Colors.blueAccent,
-              child: Container(
+              child: SizedBox(
                   height: 100,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -89,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Card(
               color: Colors.blueAccent,
-              child: Container(
+              child: SizedBox(
                   height: 100,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
